@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('alunos', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->integer('age');
-            $table->string('endereco')->nullable();
-            $table->string('nomes_pais')->nullable();
-            $table->string('contato_pais')->nullable();
-            $table->text('informacao_medica');
-            $table->string('escola')->nullable();
-            $table->time('horario_entrada')->nullable();
-            $table->time('horario_saida')->nullable();
-            $table->decimal('mensalidade', 10, 2)->nullable();
-            $table->string('status')->nullable();
+            $table->string('nome');
+            $table->integer('idade');
+            $table->text('observacao_de_saude')->nullable();
+            $table->string('escola');
+            $table->string('turno');
+            $table->string('foto');
+            $table->string('nome_do_primeiro_responsavel');
+            $table->string('celular_do_primeiro_responsavel');
+            $table->string('nome_do_segundo_responsavel')->nullable();
+            $table->string('celular_do_segundo_responsavel')->nullable();
+            $table->string('endereco');
+            $table->decimal('valor_da_mensalidade', 8, 2);
             $table->timestamps();
         });
     }
