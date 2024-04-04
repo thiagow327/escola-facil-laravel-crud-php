@@ -35,19 +35,21 @@
                     </ul>
                 </div>
             </div>
-            <div class="table-search">
-                <div>
-                    <button class="search-select">
-                        Procurar
-                    </button>
-                    <span class="search-select-arrow">
-                        <i class="fas fa-caret-down"></i>
-                    </span>
+            <form action="{{ route('alunos.index') }}" accept-charset="UTF-8" role="search" method="get">
+                <div class="table-search">
+                    <div>
+                        <button class="search-select">
+                            Procurar
+                        </button>
+                        <span class="search-select-arrow">
+                            <i class="fas fa-caret-down"></i>
+                        </span>
+                    </div>
+                    <div class="relative">
+                        <input class="search-input" type="text" name="search" value="{{ request('search') }}" placeholder="Ex: Joao da Silva..." value="{{ request('search') }}">
+                    </div>
                 </div>
-                <div class="relative">
-                    <input class="search-input" type="text" name="search" placeholder="Ex: Joao da Silva..." value="{{ request('search') }}">
-                </div>
-            </div>
+            </form>
             <div class="table-student-head">
                 <p></p>
                 <p>Nome</p>
@@ -71,6 +73,8 @@
                     </button>
                 </div>
                 @endforeach
+                @else
+                <p>Aluno não encontrado</p>
                 @endif
             </div>
             <div class="table-paginate">

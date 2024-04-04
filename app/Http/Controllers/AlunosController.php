@@ -8,9 +8,20 @@ use App\Models\Alunos;
 
 class AlunosController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $alunos = Alunos::orderby('created_at')->get();
+        $keyword = $request->get('search');
+        $perPage = 5;
+
+        if (!empty($keyword)) {
+            $alunos = Alunos::where('nome', 'LIKE', "%$keyword%")
+                ->orWhere('escola', 'LIKE', "%$keyword%")
+                ->latest()->paginate($perPage);
+        } else {
+            $alunos = Alunos::latest()->paginate($perPage);
+            
+            // ->with('i', (request()->input('page', 1) - 1) * 5);
+        }
         return view('alunos.index', ['alunos' => $alunos]);
     }
 
