@@ -6,6 +6,25 @@
             <h1>Alunos</h1>
             <a href="{{route('alunos.create')}}" class='btn-link'>Novo aluno</a>
         </div>
+        @if ($message = Session::get('success'))
+        <script type="text/javascript">
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Aluno cadastrado com sucesso"
+            });
+        </script>
+        @endif
         <div class="table">
             <div class="table-filter">
                 <div>
@@ -37,10 +56,12 @@
                 <p></p>
             </div>
             <div class="table-student-body">
-                <img src="1.jpg" />
-                <p>Joaquim dos Santos</p>
-                <p>Tito Lívio</p>
-                <p>Manhã</p>
+                @if (count($alunos) > 0)
+                @foreach($alunos as $aluno)
+                <img src="{{ asset('fotos/' . $aluno->foto) }}" />
+                <p>{{$aluno->nome}}</p>
+                <p>{{$aluno->escola}}</p>
+                <p>{{$aluno->turno}}</p>
                 <div>
                     <button class="btn btn-success">
                         <i class="fas fa-pencil-alt"></i>
@@ -49,6 +70,8 @@
                         <i class="far fa-trash-alt"></i>
                     </button>
                 </div>
+                @endforeach
+                @endif
             </div>
             <div class="table-paginate">
                 <div class="pagination">
