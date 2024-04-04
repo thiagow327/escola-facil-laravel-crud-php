@@ -19,7 +19,7 @@ class AlunosController extends Controller
                 ->latest()->paginate($perPage);
         } else {
             $alunos = Alunos::latest()->paginate($perPage);
-            
+
             // ->with('i', (request()->input('page', 1) - 1) * 5);
         }
         return view('alunos.index', ['alunos' => $alunos]);
@@ -58,5 +58,44 @@ class AlunosController extends Controller
 
         $aluno->save();
         return redirect()->route('alunos.index')->with('success', 'Aluno adicionado com sucesso.');
+    }
+
+    public function edit($id)
+    {
+        $aluno = Alunos::findOrFail($id);
+        return view('alunos.edit', ['aluno' => $aluno]);
+    }
+
+    public function update(Request $request, Alunos $aluno)
+    {
+        $request->validate([
+            'nome' => 'required'
+        ]);
+
+        $file_name = $request->hidden_foto_aluno;
+
+        if ($request->hasFile('foto')) {
+            $file_name = time() . '.' . $request->foto->getClientOriginalExtension();
+            $request->foto->move(public_path('fotos'), $file_name);
+        }
+
+        $aluno = Alunos::find($request->hidden_id);
+
+        $aluno->nome = $request->nome;
+        $aluno->idade = $request->idade;
+        $aluno->observacao_de_saude = $request->observacao_de_saude;
+        $aluno->escola = $request->escola;
+        $aluno->turno = $request->turno;
+        $aluno->foto = $file_name;
+        $aluno->nome_do_primeiro_responsavel = $request->nome_do_primeiro_responsavel;
+        $aluno->celular_do_primeiro_responsavel = $request->celular_do_primeiro_responsavel;
+        $aluno->nome_do_segundo_responsavel = $request->nome_do_segundo_responsavel;
+        $aluno->celular_do_segundo_responsavel = $request->celular_do_segundo_responsavel;
+        $aluno->endereco = $request->endereco;
+        $aluno->valor_da_mensalidade = $request->valor_da_mensalidade;
+
+        $aluno->save();
+
+        return redirect()->route('alunos.index')->with('success', 'Aluno atualizado');
     }
 }
