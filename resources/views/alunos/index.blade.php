@@ -78,13 +78,7 @@
                 @endif
             </div>
             <div class="table-paginate">
-                <div class="pagination">
-                    <a href="#" disabled>&laquo;</a>
-                    <a class="active-page">1</a>
-                    <a>2</a>
-                    <a>3</a>
-                    <a href="#">&raquo;</a>
-                </div>
+                {{ $alunos->links('layouts.pagination')}}
             </div>
         </div>
     </section>
