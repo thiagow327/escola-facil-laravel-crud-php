@@ -48,7 +48,7 @@
 
                     <label>Adicionar Foto</label>
                     <img src="" alt="" class="img-student" id="file-preview" />
-                    <input type="hidden" name="hidden_foto_aluno" value="{{ $aluno->foto }}">
+                    <input type="hidden" name="hidden_foto_aluno" value="">
                     <input type="file" name="foto" accept="image/*" onchange="showFile(event)">
                 </div>
 
@@ -80,7 +80,7 @@
 
             <div class="titlebar">
                 <h1></h1>
-                <input type="hidden" name="hidden_id" value="{{ $aluno->id }}">
+                <input type="hidden" name="hidden_id" value="">
                 <button>Salvar</button>
             </div>
         </form>
