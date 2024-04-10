@@ -35,7 +35,11 @@ class AlunosController extends Controller
             'foto' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2028',
         ];
 
-        $request->validate($rules);
+        $messages = [
+            'nome.required' => 'O campo "Nome Completo" é obrigatório.',
+        ];
+
+        $request->validate($rules, $messages);
 
         $aluno = new Alunos;
 
