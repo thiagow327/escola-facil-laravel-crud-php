@@ -19,8 +19,6 @@ class AlunosController extends Controller
                 ->latest()->paginate($perPage);
         } else {
             $alunos = Alunos::latest()->paginate($perPage);
-
-            // ->with('i', (request()->input('page', 1) - 1) * 5);
         }
         return view('alunos.index', ['alunos' => $alunos]);
     }
@@ -32,23 +30,27 @@ class AlunosController extends Controller
 
     public function store(Request $request)
     {
+        $rules = [
+            'nome' => 'required',
+            'foto' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2028',
+        ];
 
-        $request->validate([
-            'image' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2028'
-        ]);
-
+        $request->validate($rules);
 
         $aluno = new Alunos;
 
-        $file_name = time() . '.' . request()->foto->getClientOriginalExtension();
-        request()->foto->move(public_path('fotos'), $file_name);
+        // Verificar se uma imagem foi enviada
+        if ($request->hasFile('foto')) {
+            $file_name = time() . '.' . request()->foto->getClientOriginalExtension();
+            request()->foto->move(public_path('fotos'), $file_name);
+            $aluno->foto = $file_name;
+        }
 
         $aluno->nome = $request->nome;
         $aluno->idade = $request->idade;
         $aluno->observacao_de_saude = $request->observacao_de_saude;
         $aluno->escola = $request->escola;
         $aluno->turno = $request->turno;
-        $aluno->foto = $file_name;
         $aluno->nome_do_primeiro_responsavel = $request->nome_do_primeiro_responsavel;
         $aluno->celular_do_primeiro_responsavel = $request->celular_do_primeiro_responsavel;
         $aluno->nome_do_segundo_responsavel = $request->nome_do_segundo_responsavel;
