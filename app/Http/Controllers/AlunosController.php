@@ -8,6 +8,46 @@ use App\Models\Alunos;
 
 class AlunosController extends Controller
 {
+    private function validateRequest(Request $request)
+    {
+        return $request->validate([
+            'nome' => 'required',
+            'idade' => 'required|integer|min:0',
+            'observacao_de_saude' => 'nullable|string',
+            'escola' => 'nullable|string',
+            'turno' => 'nullable|string',
+            'nome_do_primeiro_responsavel' => 'required|string',
+            'celular_do_primeiro_responsavel' => 'required|numeric',
+            'nome_do_segundo_responsavel' => 'nullable|string',
+            'celular_do_segundo_responsavel' => 'nullable|numeric',
+            'endereco' => 'required|string',
+            'valor_da_mensalidade' => 'required|numeric|min:0',
+            'foto' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2028',
+        ], [
+            'nome.required' => 'O campo "Nome Completo" é obrigatório.',
+            'idade.required' => 'O campo "Idade" é obrigatório.',
+            'idade.integer' => 'O campo "Idade" deve ser um número inteiro.',
+            'idade.min' => 'O campo "Idade" deve ser no mínimo :min.',
+            'observacao_de_saude.string' => 'O campo "Observação de Saúde" deve ser uma string.',
+            'escola.string' => 'O campo "Escola" deve ser uma string.',
+            'turno.string' => 'O campo "Turno" deve ser uma string.',
+            'nome_do_primeiro_responsavel.required' => 'O campo "Nome do Primeiro Responsável" é obrigatório.',
+            'nome_do_primeiro_responsavel.string' => 'O campo "Nome do Primeiro Responsável" deve ser uma string.',
+            'celular_do_primeiro_responsavel.required' => 'O campo "Celular do Primeiro Responsável" é obrigatório.',
+            'celular_do_primeiro_responsavel.numeric' => 'O campo "Celular do Primeiro Responsável" deve ser um número.',
+            'nome_do_segundo_responsavel.string' => 'O campo "Nome do Segundo Responsável" deve ser uma string.',
+            'celular_do_segundo_responsavel.numeric' => 'O campo "Celular do Segundo Responsável" deve ser um número.',
+            'endereco.required' => 'O campo "Endereço" é obrigatório.',
+            'endereco.string' => 'O campo "Endereço" deve ser uma string.',
+            'valor_da_mensalidade.required' => 'O campo "Valor da Mensalidade" é obrigatório.',
+            'valor_da_mensalidade.numeric' => 'O campo "Valor da Mensalidade" deve ser um número.',
+            'valor_da_mensalidade.min' => 'O campo "Valor da Mensalidade" deve ser no mínimo :min.',
+            'foto.image' => 'O arquivo enviado para a foto não é uma imagem válida.',
+            'foto.mimes' => 'A foto deve ser do tipo: jpg, png, jpeg, gif ou svg.',
+            'foto.max' => 'A foto não deve exceder :max kilobytes.',
+        ]);
+    }
+
     public function index(Request $request)
     {
         $keyword = $request->get('search');
@@ -30,16 +70,7 @@ class AlunosController extends Controller
 
     public function store(Request $request)
     {
-        $rules = [
-            'nome' => 'required',
-            'foto' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2028',
-        ];
-
-        $messages = [
-            'nome.required' => 'O campo "Nome Completo" é obrigatório.',
-        ];
-
-        $request->validate($rules, $messages);
+        $this->validateRequest($request);
 
         $aluno = new Alunos;
 
@@ -74,9 +105,7 @@ class AlunosController extends Controller
 
     public function update(Request $request, Alunos $aluno)
     {
-        $request->validate([
-            'nome' => 'required'
-        ]);
+        $this->validateRequest($request);
 
         $aluno = Alunos::find($request->hidden_id);
 
