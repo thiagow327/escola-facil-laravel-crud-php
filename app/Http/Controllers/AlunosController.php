@@ -98,4 +98,16 @@ class AlunosController extends Controller
 
         return redirect()->route('alunos.index')->with('success', 'Aluno atualizado');
     }
+
+    public function destroy($id)
+    {
+        $aluno = Alunos::findOrFail($id);
+        $image_path = public_path() . "/fotos/";
+        $image = $image_path . $aluno->foto;
+        if (file_exists($image)) {
+            @unlink($image);
+        }
+        $aluno->delete();
+        return redirect('alunos')->with('success', 'Aluno deletado!');
+    }
 }

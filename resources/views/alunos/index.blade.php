@@ -21,8 +21,10 @@
                     });
                     Toast.fire({
                         icon: "success",
-                        title: "Aluno cadastrado com sucesso"
+                        title: "{{ $message }}"
                     });
+
+                    {{ Session::forget('success') }}
                 </script>
             @endif
             <div class="table">
@@ -66,14 +68,16 @@
                             <p>{{ $aluno->escola }}</p>
                             <p>{{ $aluno->turno }}</p>
                             <div>
-
-
                                 <a href="{{ route('alunos.edit', $aluno->id) }}" class="btn-link btn btn-success">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
-                                <button class="btn btn-danger">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
+                                <form method="post" action="{{ route('alunos.destroy', $aluno->id) }}">
+                                    @method('delete')
+                                    @csrf
+                                    <button class="btn btn-danger" onclick="deleteConfirm(event)">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </form>
                             </div>
                         @endforeach
                     @else
@@ -86,4 +90,23 @@
             </div>
         </section>
     </main>
+    <script>
+        window.deleteConfirm = function(e) {
+            e.preventDefault();
+            var form = e.target.closest('form');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
 @endsection
