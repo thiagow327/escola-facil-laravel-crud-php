@@ -74,13 +74,6 @@ class AlunosController extends Controller
             'nome' => 'required'
         ]);
 
-        $file_name = $request->hidden_foto_aluno;
-
-        if ($request->hasFile('foto')) {
-            $file_name = time() . '.' . $request->foto->getClientOriginalExtension();
-            $request->foto->move(public_path('fotos'), $file_name);
-        }
-
         $aluno = Alunos::find($request->hidden_id);
 
         $aluno->nome = $request->nome;
@@ -88,7 +81,18 @@ class AlunosController extends Controller
         $aluno->observacao_de_saude = $request->observacao_de_saude;
         $aluno->escola = $request->escola;
         $aluno->turno = $request->turno;
-        $aluno->foto = $file_name;
+
+        if ($request->hasFile('foto')) {
+            $file_name = time() . '.' . $request->foto->getClientOriginalExtension();
+            $request->foto->move(public_path('fotos'), $file_name);
+            // Excluir a imagem antiga apenas se uma nova imagem for fornecida
+            $image_path = public_path('fotos/') . $aluno->foto;
+            if (file_exists($image_path)) {
+                @unlink($image_path);
+            }
+            $aluno->foto = $file_name;
+        }
+
         $aluno->nome_do_primeiro_responsavel = $request->nome_do_primeiro_responsavel;
         $aluno->celular_do_primeiro_responsavel = $request->celular_do_primeiro_responsavel;
         $aluno->nome_do_segundo_responsavel = $request->nome_do_segundo_responsavel;
